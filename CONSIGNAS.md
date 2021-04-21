@@ -10,7 +10,7 @@ Autor:
 
 Se desea modelar la información de alumnos de la facultad en Neo4j, de modo tal que se puedan resolver las siguientes consultas:
 
-1.  Listado de alumnos que cursaron materias juntos, pero en esta materia son de distintos grupos.
+1. Listado de alumnos que cursaron materias juntos, pero en esta materia son de distintos grupos.
 
 2. Listado de docentes que dictaron más de una materia.
 
