@@ -25,26 +25,27 @@ El siguiente gráfico de dominio muestra el modelo de datos utilizados para reso
 
 Se emplearon los siguientes nodos:
 
-- `Persona`: Permite agrupar bajo un mismo nodo a múltiples actores con distintos roles. Se definieron como propiedades de este nodo `nombre`, `apellido`, `fecha de nacimiento`, `dirección de e-mail` y `rol`. Esta última propiedad es de vital importancia para diferenciar en este caso `alumnos` de `docentes`.
+- `Persona`: Permite agrupar bajo un mismo nodo a múltiples actores con distintos roles. Se definieron como propiedades de este nodo `nombre`, `apellido`, `fecha de nacimiento`, `dirección de e-mail` y `rol`. Esta última propiedad es de vital importancia para diferenciar `alumnos` de `docentes`.
+
 - `Materia`: Un nodo que representa las materias del último año de Ingeniería Electrónica. Como propiedades se incluyeron el `nombre`, `especialidad` ya que en caso de extender el modelo a otros años existen materias básicas que se comparten por muchas carreras y `electiva` para saber si es una materia electiva u obligatoria.
 
-En cuanto a las relaciones, se definieron tres básicas:
+En cuanto a las relaciones, fue necesario definir las siguientes:
 
-- `CURSAR`: Para relacionar `alumnos` con `materias`. Se incluyeron propiedades propias del cursado de la materia, como ser `curso`, `grupo`, `año`, `cuatrimestre`, `estado` y la `nota`.
-- `DICTAR`: Se usa para relacionar `docentes` con `materias`. Las propiedad elegida para esa relación fue `curso`, aunque en un futuro se podrían implementar el `año` y `cuatrimestre` para contar con mejor nivel de detalle.
-- `CONOCER`: Es una relación recursiva que vincula actores del nodo `Persona` con otros actores del nodo `Persona`. No fue necesario definir ningún tipo de propiedad.
+- `:CURSAR`: Para relacionar `alumnos` con `materias`. Se incluyeron propiedades inherentes al cursado de la materia, como ser `curso`, `grupo`, `año`, `cuatrimestre`, `estado` y la `nota`.
+
+- `:DICTAR`: Se usa para relacionar `docentes` con `materias`. Las propiedad elegida para esta relación fue `curso`, aunque en un futuro se podrían implementar el `año` y `cuatrimestre` para contar con mejor nivel de detalle.
+
+- `:CONOCER`: Es una relación recursiva que vincula actores del nodo `Persona` con otros actores del nodo `Persona`. No fue necesario definir ningún tipo de propiedad.
 
 #### Implementación
 
-##### Archivos necesarios
-
 Este repositorio cuenta con dos archivos necesarios para replicar los resultados obtenidos:
 
-- El archivo [dump.cypher](dump.cypher), el cual contiene las consultas que se deben ejecutar para cargar datos a la Neo4j.
+- El archivo [dump.cypher](dump.cypher), el cual contiene las consultas que se deben ejecutar para cargar datos a la base Neo4j.
 
 - El archivo [query.cypher](query.cypher) que contiene todas las consultas solicitadas en el Trabajo Práctico.
 
-Una vez que se termina de cargar todos los datos, se podrán consultar todos los nodos y relaciones creadas con la siguiente consulta:
+Una vez que se terminan de cargar todos los datos, se podrán consultar todos los nodos y relaciones creadas con la siguiente consulta:
 
     MATCH p=()-->() RETURN p
 
