@@ -10,9 +10,52 @@ Docente:
 
 * Yoel Yamil López
 
-### Neo4j - Modelado e implementación
+### Neo4j: Modelado e implementación
 
 ---
+
+#### Modelado
+
+El siguiente gráfico de dominio muestra el modelo de datos utilizados para resolver el Trabajo Práctico.
+
+<p align="center">
+    <img src="doc/graph_dominio.png"><br><br>
+    <b>Figura 1</b>. Modelo de datos utilizado.
+</p>
+
+Se emplearon los siguientes nodos:
+
+- `Persona`: Permite agrupar bajo un mismo nodo a múltiples actores con distintos roles. Se definieron como propiedades de este nodo `nombre`, `apellido`, `fecha de nacimiento`, `dirección de e-mail` y `rol`. Esta última propiedad es de vital importancia para diferenciar en este caso `alumnos` de `docentes`.
+- `Materia`: Un nodo que representa las materias del último año de Ingeniería Electrónica. Como propiedades se incluyeron el `nombre`, `especialidad` ya que en caso de extender el modelo a otros años existen materias básicas que se comparten por muchas carreras y `electiva` para saber si es una materia electiva u obligatoria.
+
+En cuanto a las relaciones, se definieron tres básicas:
+
+- `CURSAR`: Para relacionar `alumnos` con `materias`. Se incluyeron propiedades propias del cursado de la materia, como ser `curso`, `grupo`, `año`, `cuatrimestre`, `estado` y la `nota`.
+- `DICTAR`: Se usa para relacionar `docentes` con `materias`. Las propiedad elegida para esa relación fue `curso`, aunque en un futuro se podrían implementar el `año` y `cuatrimestre` para contar con mejor nivel de detalle.
+- `CONOCER`: Es una relación recursiva que vincula actores del nodo `Persona` con otros actores del nodo `Persona`. No fue necesario definir ningún tipo de propiedad.
+
+#### Implementación
+
+##### Archivos necesarios
+
+Este repositorio cuenta con dos archivos necesarios para replicar los resultados obtenidos:
+
+- El archivo [dump.cypher](dump.cypher), el cual contiene las consultas que se deben ejecutar para cargar datos a la Neo4j.
+
+- El archivo [query.cypher](query.cypher) que contiene todas las consultas solicitadas en el Trabajo Práctico.
+
+Una vez que se termina de cargar todos los datos, se podrán consultar todos los nodos y relaciones creadas con la siguiente consulta:
+
+    MATCH p=()-->() RETURN p
+
+Obteniéndose un gráfico de la siguiente forma:
+
+<p align="center">
+    <img src="doc/graph_all.png"><br><br>
+    <b>Figura 2</b>. Grafo de todos los nodos y relaciones.
+</p>
+
+#### Consultas
 
 **1. Listado de alumnos que cursaron materias juntos, pero en esta materia son de distintos grupos.**
 
@@ -25,8 +68,8 @@ Consulta:
 Resultados:
 
 <p align="center">
-    <img src="doc/graph_punto_1.png"><br>
-    <b>Figura 1</b>. Grafo de alumnos. Se muestra también la relación CONOCER.
+    <img src="doc/graph_punto_1.png"><br><br>
+    <b>Figura 3</b>. Grafo de alumnos. Se muestra también la relación CONOCER.
 </p>
 
     ╒══════════════════════════════════════════════════════════════════╤══════════════════════════════════════════════════════════════════╕
@@ -135,8 +178,8 @@ Consulta:
 Resultados:
 
 <p align="center">
-    <img src="doc/graph_punto_2.png"><br>
-    <b>Figura 2</b>. Grafo de docentes que dictan más de una materia.
+    <img src="doc/graph_punto_2.png"><br><br>
+    <b>Figura 4</b>. Grafo de docentes que dictaron más de una materia.
 </p>
 
     ╒══════════════════════════════════════════════════════════════════════╕
@@ -159,8 +202,8 @@ Consulta:
 Resultados:
 
 <p align="center">
-    <img src="doc/graph_punto_3.png"><br>
-    <b>Figura 3</b>. Grafo de solo una persona, la cual fue seleccionada.
+    <img src="doc/graph_punto_3.png"><br><br>
+    <b>Figura 5</b>. Grafo de solo una persona seleccionada en la consulta.
 </p>
 
     ╒══════════════════════════════════════════════════════════════════════╤═════════════════════╕
@@ -183,8 +226,8 @@ Consulta:
 Resultados:
 
 <p align="center">
-    <img src="doc/graph_punto_4.png"><br>
-    <b>Figura 4</b>. Grafo de todas las personas que cursaron juntas pero no se conocen.
+    <img src="doc/graph_punto_4.png"><br><br>
+    <b>Figura 6</b>. Grafo de todas las personas que cursaron juntas pero que no se conocen.
 </p>
 
     ╒══════════════════════════════════════════════════════════════════╤══════════════════════════════════════════════════════════════════╕
@@ -279,8 +322,8 @@ Consulta:
 Resultados:
 
 <p align="center">
-    <img src="doc/graph_punto_5.png"><br>
-    <b>Figura 5</b>. Grafo de todos los conocidos de tus conocidos hasta longitud 2.
+    <img src="doc/graph_punto_5.png"><br><br>
+    <b>Figura 7</b>. Grafo de todos los conocidos de tus conocidos hasta longitud 2.
 </p>
 
     ╒═══════════════════════════════════════════════════════════════════════╤═══════════════════════════════════════════════════════════════════════╕
@@ -323,7 +366,7 @@ Resultados:
     │"Lorenzo" │"Piñeiro"   │
     └──────────┴────────────┘
 
-Una posible variante requeriría modificar el modelo de datos. En lugar de utilizar el nodo `PERSONAS` se podrían implementar los nodos `ALUMNO` y `DOCENTE`, manteniendo las mismas relaciones de `CURSAR` y `DICTAR` pero removiendo el atributo `rol`. En dicho caso, la consulta quedaría de la siguiente manera:
+Una posible variante requeriría modificar el modelo de datos empleado. En lugar de utilizar el nodo `PERSONAS`, se podrían implementar los nodos `ALUMNO` y `DOCENTE`, manteniendo las relaciones de `CURSAR` y `DICTAR` pero removiendo el atributo `rol`. En ese caso, la consulta quedaría de la siguiente manera:
 
     MATCH (a:Docente)-[r:CURSAR]->(m:Materia)
     RETURN a.nombre, a.apellido;
@@ -340,8 +383,8 @@ Consulta:
 Resultados:
 
 <p align="center">
-    <img src="doc/graph_punto_7.png"><br>
-    <b>Figura 6</b>. Grafo de las materias electivas no cursadas pero que si fueron cursadas por alumnos que cursaron con él.
+    <img src="doc/graph_punto_7.png"><br><br>
+    <b>Figura 8</b>. Grafo de las materias electivas no cursadas pero que si fueron cursadas por alumnos que cursaron con él.
 </p>
 
     ╒══════════════════════════════════════════════════════════════════════╕
@@ -370,8 +413,8 @@ Consulta:
 Resultados:
 
 <p align="center">
-    <img src="doc/graph_punto_7.png"><br>
-    <b>Figura 7</b>. Grafo de las materias electivas no cursadas pero que si fueron cursadas por alumnos conocidos.
+    <img src="doc/graph_punto_7.png"><br><br>
+    <b>Figura 9</b>. Grafo de las materias electivas no cursadas pero que si fueron cursadas por sus conocidos.
 </p>
 
     ╒══════════════════════════════════════════════════════════════════════╕
